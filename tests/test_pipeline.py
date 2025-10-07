@@ -14,4 +14,7 @@ def test_pipeline_offline_fallback(tmp_path):
     data = json.loads(json_out.read_text(encoding="utf-8"))
     assert "space_field" in data and "tokens" in data["space_field"]
     assert len(data["space_field"]["tokens"]) >= 1
+    assert "analytics" in data
+    assert "fft" in data["analytics"]
+    assert "glyph_stream" in data["analytics"]
     assert answer.strip()

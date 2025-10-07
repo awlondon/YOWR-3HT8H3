@@ -11,6 +11,7 @@ from .geometry import pca_2d
 from .graphing import build_graph
 from .attention import random_walk_with_restart
 from .threads import threads_from_attention
+from .analysis import fft_magnitude_series, glyph_stream
 from .generation import compose_answer
 from .local_model import load_local_model, save_local_model, update_model
 from .providers import make_provider
@@ -49,6 +50,8 @@ def run_hlsf(prompt: str, json_out: str, text_out: str, settings: Settings = Set
     # 3: vector numbers for universe
     scores, embs = scalar_projection_along(uniq, settings.emb_dim, settings.seed)
     vnums = vector_numbers(scores)
+    token_values = [vnums[t] for t in toks if t in vnums]
+    universe_values = [vnums[u] for u in uniq if u in vnums]
 
     # 4: glyphs (LLM choose indices from glyph bank; else deterministic map)
     bank, categories = build_or_load_glyph_bank(settings.glyph_count, settings.seed)
@@ -90,6 +93,7 @@ def run_hlsf(prompt: str, json_out: str, text_out: str, settings: Settings = Set
         "triangles": [d.__dict__ for d in tris],
         "edges": [{"a": a, "b": b, "k": w} for a, b, w in edges],
     }
+    expansion_text_map = {t: [e[0] for e in expansions_map.get(t, [])] for t in toks}
     pkg = {
         "version": settings.version,
         "space_field": sf,
@@ -101,6 +105,15 @@ def run_hlsf(prompt: str, json_out: str, text_out: str, settings: Settings = Set
             "triangles": len(tris),
             "edges": len(edges),
         }
+    }
+
+    pkg["analytics"] = {
+        "fft": {
+            "tokens": fft_magnitude_series(token_values),
+            "universe": fft_magnitude_series(universe_values),
+        },
+        "vector_numbers": vnums,
+        "glyph_stream": glyph_stream(toks, expansion_text_map, glyph_map),
     }
 
     # Local learning
@@ -115,4 +128,20 @@ def run_hlsf(prompt: str, json_out: str, text_out: str, settings: Settings = Set
     with open(text_out, "w", encoding="utf-8") as f:
         f.write(answer)
 
+    return pkg, answer
+
+
+def run_hlsf_in_memory(prompt: str, settings: Settings = Settings()):
+    """Execute the pipeline without touching disk.
+
+    The CLI still prefers :func:`run_hlsf` to persist results, while the web
+    application uses this helper to return analytics directly to the browser.
+    """
+
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        json_out = os.path.join(tmp, "space_field.json")
+        text_out = os.path.join(tmp, "answer.txt")
+        pkg, answer = run_hlsf(prompt, json_out, text_out, settings)
     return pkg, answer
