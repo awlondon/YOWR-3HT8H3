@@ -43,6 +43,23 @@ The engine is provider-agnostic: any server exposing the OpenAI-compatible Chat 
 pytest -q
 ```
 
+## Development
+
+The repository ships with a small helper `Makefile` to streamline common
+tasks while iterating locally:
+
+```bash
+make setup   # create a virtualenv and install editable deps + pytest
+make run     # execute a demo prompt using the mock provider
+make test    # run the pytest suite
+```
+
+Project sources live under `src/hlsf/` and the JSON schemas that
+describe serialized artifacts are kept in `schema/`. Example runs and
+fixtures can be found in `examples/` and `var/` respectively, which makes
+it easy to inspect how the engine stitches together expansions, glyphs,
+and the final answer text.
+
 ## Notes
 
 - If `LLM_PROVIDER` is absent (or `--provider mock`), the pipeline uses the offline baseline for expansions & glyphs and the baseline composer.
