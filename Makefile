@@ -7,7 +7,7 @@ test:
 pytest -q
 
 run:
-hlsf run "demo prompt" --json-out out/space_field.json --text-out out/answer.txt --provider mock --passes 2
+	hlsf gui --host 127.0.0.1 --port 8000
 
 fmt:
 python -m compileall src
