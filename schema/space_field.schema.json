@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SpaceFieldMap",
+  "type": "object",
+  "required": ["space_field", "threads", "trace_summary", "stats", "version"],
+  "properties": {
+    "version": {"type": "string"},
+    "space_field": {
+      "type": "object",
+      "required": ["tokens", "expansions", "triangles", "edges"],
+      "properties": {
+        "tokens": {"type": "array"},
+        "expansions": {"type": "array"},
+        "triangles": {"type": "array"},
+        "edges": {"type": "array"}
+      }
+    },
+    "threads": {"type": "array"},
+    "trace_summary": {"type": "string"},
+    "stats": {"type": "object"}
+  }
+}
