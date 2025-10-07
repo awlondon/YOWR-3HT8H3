@@ -4,7 +4,9 @@ from .settings import Settings
 
 
 def main():
-    p = argparse.ArgumentParser(description="HLSF cognition engine (LLM-enabled)")
+    p = argparse.ArgumentParser(
+        description="HLSF cognition engine (LLM-enabled). Defaults to launching the local HTML GUI."
+    )
     sub = p.add_subparsers(dest="cmd")
 
     pr = sub.add_parser("run", help="Run HLSF on a prompt")
@@ -18,12 +20,19 @@ def main():
     pr.add_argument("--passes", type=int, default=None, help="Refinement passes (>=1)")
     pr.add_argument("--no-llm", action="store_true", help="Disable LLM usage")
 
-    pg = sub.add_parser("gui", help="Launch the interactive web interface")
+    pg = sub.add_parser("gui", help="Launch the interactive localhost web interface")
     pg.add_argument("--host", type=str, default="127.0.0.1", help="Host to bind the GUI server")
     pg.add_argument("--port", type=int, default=8000, help="Port for the GUI server")
     pg.add_argument("--no-browser", action="store_true", help="Do not open a browser window")
 
     args = p.parse_args()
+
+    if args.cmd is None:
+        from .web.app import run_gui
+
+        run_gui()
+        return
+
     if args.cmd == "run":
         s = Settings()
         s.seed = args.seed
