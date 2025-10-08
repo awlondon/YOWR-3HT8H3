@@ -3,6 +3,7 @@ const STORE_NAME = 'maps';
 const VERSION = 1;
 
 export const MODEL_KEY = 'LOCAL_MODEL v.0.0.0.0';
+export const LOCAL_MODEL_KEY = 'LOCAL_MODEL';
 
 function openDatabase() {
   // Step 90: Lazily open IndexedDB for persistent storage.
@@ -36,6 +37,26 @@ export async function loadModel() {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, 'readonly');
     const request = tx.objectStore(STORE_NAME).get(MODEL_KEY);
+    request.onsuccess = () => resolve(request.result ?? null);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+export async function persist(payload) {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).put(payload, LOCAL_MODEL_KEY);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+export async function loadLatest() {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const request = tx.objectStore(STORE_NAME).get(LOCAL_MODEL_KEY);
     request.onsuccess = () => resolve(request.result ?? null);
     request.onerror = () => reject(request.error);
   });

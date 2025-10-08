@@ -1,18 +1,21 @@
-import { createElement, clearElement } from '../ui-helpers.js';
+import { on } from '../../state.js';
 
-export function mountOutputPanel(container, map) {
-  clearElement(container);
-  const title = createElement('h2', { text: 'Output' });
-  container.appendChild(title);
-  if (!map?.formatted) {
-    container.appendChild(createElement('p', { text: 'No output yet.' }));
-    return;
-  }
-  const summary = createElement('p', { text: map.formatted.regionSummary });
-  const list = createElement('ul');
-  for (const bullet of map.formatted.bullets) {
-    const li = createElement('li', { text: bullet });
-    list.appendChild(li);
-  }
-  container.append(summary, list);
+export function OutputPanel(){
+  const el = document.createElement('section');
+  el.className = 'panel output-panel';
+  el.innerHTML = `
+    <h2>Output</h2>
+    <article id="answer"></article>
+    <h3>Summary</h3>
+    <article id="summary"></article>
+  `;
+  const ans = el.querySelector('#answer');
+  const sum = el.querySelector('#summary');
+
+  on('results', ({answer, trace}) => {
+    ans.textContent = answer || '(no answer)';
+    sum.textContent = trace || '(no summary)';
+  });
+
+  return { el, render(a,t){ ans.textContent=a; sum.textContent=t; } };
 }
