@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HLSF Engine WebGL</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header>
+      <h1>High-Level Space Field Cognition Engine</h1>
+      <button id="themeToggle" aria-label="Toggle theme">Toggle Theme</button>
+    </header>
+    <main>
+      <section class="left-panel" aria-label="Inputs">
+        <div id="inputPanel"></div>
+        <div id="tokenTable"></div>
+        <div id="threadsPanel"></div>
+        <div id="metaPanel"></div>
+      </section>
+      <section class="center-panel" aria-label="Space Field Visualization">
+        <canvas id="glCanvas" width="1400" height="900" role="img" aria-label="Space Field map in WebGL"></canvas>
+        <canvas id="glyphAtlasWorker" width="1024" height="1024" hidden></canvas>
+        <div id="inspector"></div>
+      </section>
+      <section class="right-panel" aria-label="Outputs">
+        <div id="outputPanel"></div>
+        <div id="miniMap"></div>
+        <button id="helpButton" aria-haspopup="dialog">Help</button>
+      </section>
+    </main>
+    <div id="helpModal" role="dialog" aria-modal="true" hidden></div>
+  </div>
+  <script type="module" src="/src/app.js"></script>
+</body>
+</html>
