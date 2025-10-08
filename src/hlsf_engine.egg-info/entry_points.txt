@@ -1,0 +1,2 @@
+[console_scripts]
+hlsf = hlsf.cli:main
