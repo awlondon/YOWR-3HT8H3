@@ -1,0 +1,26 @@
+[
+  {
+    "token": "learning",
+    "associations": [
+      "practice",
+      "iteration",
+      "reflection"
+    ]
+  },
+  {
+    "token": "algebra",
+    "associations": [
+      "structures",
+      "vectors",
+      "systems"
+    ]
+  },
+  {
+    "token": "creative",
+    "associations": [
+      "novel",
+      "play",
+      "experimentation"
+    ]
+  }
+]

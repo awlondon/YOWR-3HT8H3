@@ -1,0 +1,17 @@
+{
+  "name": "hlsf-engine-webgl",
+  "version": "0.0.0",
+  "description": "High-Level Space Field cognition engine with WebGL2 renderer",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vite": "^5.2.0",
+    "vitest": "^1.3.1"
+  }
+}
