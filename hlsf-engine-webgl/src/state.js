@@ -1,54 +1,22 @@
-import { runPipeline } from './core/steps.js';
-import { loadModel, saveModel, MODEL_KEY } from './core/memory.js';
+// Simple pub/sub and session state
+export const state = {
+  selection: null,
+  lastPrompt: '',
+  map: null,
+  answer: '',
+  trace: '',
+  listeners: new Map(),
+};
 
-class StateManager {
-  constructor() {
-    this.listeners = new Set();
-    this.current = {
-      prompt: 'Find three creative study techniques for learning linear algebra quickly.',
-      map: null
-    };
-    this.ready = false;
-  }
-
-  subscribe(fn) {
-    this.listeners.add(fn);
-    if (this.ready) fn(this.current);
-    return () => this.listeners.delete(fn);
-  }
-
-  async hydrate() {
-    try {
-      const saved = await loadModel();
-      if (saved) {
-        this.current.map = saved;
-      }
-    } catch (error) {
-      console.warn('Failed to hydrate model', error);
-    } finally {
-      this.ready = true;
-      this.emit();
-    }
-  }
-
-  emit() {
-    for (const fn of this.listeners) {
-      fn(this.current);
-    }
-  }
-
-  async run(prompt) {
-    this.current.prompt = prompt;
-    const pipeline = runPipeline(prompt);
-    this.current.map = pipeline;
-    this.emit();
-    try {
-      await saveModel(pipeline.exported);
-    } catch (error) {
-      console.warn('Failed to persist map', error);
-    }
-  }
+export function on(evt, fn){
+  if(!state.listeners.has(evt)) state.listeners.set(evt, new Set());
+  state.listeners.get(evt).add(fn);
+  return () => state.listeners.get(evt).delete(fn);
 }
+export function emit(evt, payload){ (state.listeners.get(evt)||[]).forEach(fn => fn(payload)); }
 
-export const state = new StateManager();
-export const MODEL_STORAGE_KEY = MODEL_KEY;
+export function setSelection(sel){ state.selection = sel; emit('selection', sel); }
+export function setResults({map, answer, trace}) {
+  state.map = map; state.answer = answer; state.trace = trace;
+  emit('results', {map, answer, trace});
+}

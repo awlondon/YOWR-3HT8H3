@@ -2,8 +2,8 @@
   color-scheme: light dark;
   --bg: #f8f8fb;
   --fg: #1c1c25;
-  --panel: #ffffffcc;
-  --panel-dark: rgba(24, 24, 32, 0.86);
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-dark: rgba(24, 24, 32, 0.86);
   --accent: #5d7bff;
   --border: rgba(60, 60, 80, 0.3);
   font-family: 'Atkinson Hyperlegible', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -19,83 +19,114 @@ body {
 .app-shell {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   padding: 0.75rem 1.5rem;
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(12px);
 }
 
+header nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 main {
   flex: 1;
   display: grid;
-  grid-template-columns: 320px 1fr 320px;
-  gap: 0.75rem;
-  padding: 0.75rem;
+  grid-template-columns: 320px 1fr 360px;
+  gap: 16px;
+  padding: 12px;
   box-sizing: border-box;
+  min-height: 0;
 }
 
-section {
-  background: var(--panel);
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 0.75rem;
+  padding: 12px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   overflow: auto;
+}
+
+.input-panel textarea {
+  width: 100%;
+  min-height: 180px;
+  font: 14px/1.4 system-ui, sans-serif;
+  resize: vertical;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block: 8px;
+}
+
+button {
+  font: inherit;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 6px 12px;
+  background: #ecefff;
+  color: #1c1c25;
+  cursor: pointer;
+}
+
+button.primary {
+  background: var(--accent);
+  color: white;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #0b0d13;
+  border-radius: 12px;
+}
+
+:focus {
+  outline: 2px solid #6aa2ff;
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+details {
+  margin-top: 8px;
+}
+
+details label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-top: 6px;
 }
 
 body.dark {
   --bg: #101018;
   --fg: #f5f6ff;
-  --panel: var(--panel-dark);
+  --surface: var(--surface-dark);
   --border: rgba(255,255,255,0.1);
-}
-
-#glCanvas {
-  width: 100%;
-  height: calc(100% - 120px);
-  border-radius: 12px;
-  background: #05060d;
-  display: block;
-}
-
-button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-#helpModal[hidden] {
-  display: none;
-}
-
-#helpModal {
-  position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: rgba(0,0,0,0.4);
-}
-
-#helpModal .dialog {
-  background: var(--panel);
-  padding: 2rem;
-  border-radius: 12px;
-  max-width: 560px;
-  box-shadow: 0 24px 48px rgba(0,0,0,0.25);
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th,
-.table td {
-  padding: 0.4rem 0.6rem;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
 }

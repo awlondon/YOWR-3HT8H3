@@ -1,10 +1,21 @@
-import { createTexture, createFramebuffer } from './gl-utils.js';
+import { createFramebuffer } from './gl-utils.js';
+
+function createPickTexture(gl, width, height){
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  return texture;
+}
 
 export class PickingPass {
   constructor(gl, width, height, renderer) {
     this.gl = gl;
     this.renderer = renderer;
-    this.texture = createTexture(gl, width, height, null);
+    this.texture = createPickTexture(gl, width, height);
     this.fbo = createFramebuffer(gl, this.texture);
     this.size = { width, height };
   }
@@ -14,7 +25,7 @@ export class PickingPass {
     this.size.width = width;
     this.size.height = height;
     gl.bindTexture(gl.TEXTURE_2D, this.texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, width, height, 0, gl.RED, gl.UNSIGNED_BYTE, null);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
   }
 
   render() {

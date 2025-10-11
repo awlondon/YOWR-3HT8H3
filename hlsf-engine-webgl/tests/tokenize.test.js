@@ -1,11 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
 import { tokenizeInput } from '../src/core/tokenize.js';
 
-describe('tokenizeInput', () => {
-  it('produces token objects with weights', () => {
-    const tokens = tokenizeInput('Learning linear algebra quickly with creative practice.');
-    expect(tokens.length).toBeGreaterThan(0);
-    expect(tokens[0]).toHaveProperty('id');
-    expect(tokens[0]).toHaveProperty('weight');
-  });
+test('tokenizeInput produces token objects with weights', () => {
+  const tokens = tokenizeInput('Learning linear algebra quickly with creative practice.');
+  assert.ok(tokens.length > 0);
+  assert.ok('id' in tokens[0]);
+  assert.ok('weight' in tokens[0]);
 });
